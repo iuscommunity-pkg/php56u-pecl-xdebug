@@ -6,7 +6,7 @@
 Name:           %{php_base}-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.3.0
-Release:        1.ius%{?dist}
+Release:        2.ius%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # The Xdebug License, version 1.01
@@ -177,6 +177,9 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Ben Harper <ben.harper@rackspace.com> - 2.3.0-2.ius
+- Rebuilding against php56u-5.6.6-2.ius as it is now using bundled PCRE.
+
 * Mon Feb 23 2015 Ben Harper <ben.harper@rackspace.com> - 2.3.0-1.ius
 - porting fomr php55u-pecl-xdebug
 - add if for filter_provides_in
