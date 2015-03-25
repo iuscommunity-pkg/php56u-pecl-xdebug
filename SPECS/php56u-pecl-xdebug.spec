@@ -167,6 +167,7 @@ fi
 
 
 %files
+%doc NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
