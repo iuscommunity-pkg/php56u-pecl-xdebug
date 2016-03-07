@@ -21,9 +21,6 @@ BuildRequires:  %{php_base}-devel
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
 
-Requires(post): %{php_base}-pear
-Requires(postun): %{php_base}-pear
-
 Requires:       %{php_base}(zend-abi) = %{php_zend_api}
 Requires:       %{php_base}(api) = %{php_core_api}
 
@@ -171,16 +168,6 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
-fi
-
-
 %files
 %license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
@@ -198,6 +185,7 @@ fi
 * Mon Mar 07 2016 Carl George <carl.george@rackspace.com> - 2.4.0-1.ius
 - Latest upstream
 - Use %%license on LICENSE file
+- Drop scriptlets, replaced by file triggers in php56u-pear (Fedora)
 
 * Mon Jun 30 2015 Carl George <carl.george@rackspace.com> - 2.3.3-1.ius
 - Latest upstream
