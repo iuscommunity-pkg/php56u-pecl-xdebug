@@ -27,17 +27,23 @@ Requires(postun): %{php_base}-pear
 Requires:       %{php_base}(zend-abi) = %{php_zend_api}
 Requires:       %{php_base}(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
+# provide the stock name
 Provides:       php-pecl-%{pecl_name} = %{version}
 Provides:       php-pecl-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(Xdebug) = %{version}
-Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
+
+# provide the stock and IUS names without pecl
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{php_base}-%{pecl_name} = %{version}
 Provides:       %{php_base}-%{pecl_name}%{?_isa} = %{version}
+
+# provide the stock and IUS names in pecl() format
+Provides:       php-pecl(Xdebug) = %{version}
+Provides:       php-pecl(Xdebug)%{?_isa} = %{version}
 Provides:       %{php_base}-pecl(Xdebug) = %{version}
 Provides:       %{php_base}-pecl(Xdebug)%{?_isa} = %{version}
 
+# conflict with the stock name
 Conflicts:      php-pecl-%{pecl_name} < %{version}
 
 # Filter private shared
