@@ -187,7 +187,7 @@ done
 - Use %%license on LICENSE file
 - Drop scriptlets, replaced by file triggers in php56u-pear (Fedora)
 
-* Mon Jun 30 2015 Carl George <carl.george@rackspace.com> - 2.3.3-1.ius
+* Tue Jun 30 2015 Carl George <carl.george@rackspace.com> - 2.3.3-1.ius
 - Latest upstream
 
 * Wed Mar 25 2015 Carl George <carl.george@rackspace.com> - 2.3.2-1.ius
@@ -247,7 +247,7 @@ done
 * Fri May 11 2012 Dustin Henry Offutt <dustin.offutt@rackspace.com> 2.2.0-2
 - Build for php54
 
-* Wed May 05 2012 Dustin Henry Offutt <dustin.offutt@rackspace.com> 2.2.0-1
+* Sat May 05 2012 Dustin Henry Offutt <dustin.offutt@rackspace.com> 2.2.0-1
 - Latest sources from upstream
 - Remove expectation of file "Changelog" which file "NEWS" now covers, according to the pecl-xdebug project (http://bugs.xdebug.org/view.php?id=828)
 
