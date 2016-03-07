@@ -1,5 +1,6 @@
 %global pecl_name xdebug
 %global php_base php56u
+%global with_zts  0%{?__ztsphp:1}
 # XDebug should be loaded after opcache
 %global ini_name  15-%{pecl_name}.ini
 
@@ -79,8 +80,10 @@ fi
 
 cd ..
 
+%if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
+%endif
 
 
 %build
@@ -98,12 +101,14 @@ pushd debugclient
 make %{?_smp_mflags}
 popd
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --enable-xdebug  \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -126,6 +131,7 @@ zend_extension=%{pecl_name}.so
 ; see http://xdebug.org/docs/all_settings
 EOF
 
+%if %{with_zts}
 # Install ZTS extension
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
@@ -136,6 +142,7 @@ zend_extension=%{pecl_name}.so
 
 ; see http://xdebug.org/docs/all_settings
 EOF
+%endif
 
 # Test & Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -150,10 +157,12 @@ done
     --define zend_extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep Xdebug
 
+%if %{with_zts}
 %{_bindir}/zts-php \
     --no-php-ini \
     --define zend_extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep Xdebug
+%endif
 
 
 %post
@@ -173,8 +182,10 @@ fi
 %{php_extdir}/%{pecl_name}.so
 %{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
