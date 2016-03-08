@@ -7,7 +7,7 @@
 Name:           %{php_base}-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        1.ius%{?dist}
+Release:        2.ius%{?dist}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # The Xdebug License, version 1.01
@@ -20,6 +20,9 @@ BuildRequires:  %{php_base}-pear
 BuildRequires:  %{php_base}-devel
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
+
+Requires(post): %{php_base}-pear
+Requires(postun): %{php_base}-pear
 
 Requires:       %{php_base}(zend-abi) = %{php_zend_api}
 Requires:       %{php_base}(api) = %{php_core_api}
@@ -168,6 +171,16 @@ done
 %endif
 
 
+%post
+%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+
+
+%postun
+if [ $1 -eq 0 ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+
+
 %files
 %license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
@@ -182,6 +195,9 @@ done
 
 
 %changelog
+* Tue Mar 08 2016 Carl George <carl.george@rackspace.com> - 2.4.0-2.ius
+- Re-add scriptlets, file triggers aren't available in EL version of RPM
+
 * Mon Mar 07 2016 Carl George <carl.george@rackspace.com> - 2.4.0-1.ius
 - Latest upstream
 - Use %%license on LICENSE file
