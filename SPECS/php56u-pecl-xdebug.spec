@@ -46,11 +46,10 @@ Provides:       %{php_base}-pecl(Xdebug)%{?_isa} = %{version}
 # conflict with the stock name
 Conflicts:      php-pecl-%{pecl_name} < %{version}
 
-# Filter private shared
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+# RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
-%endif
 
 
 %description
@@ -195,6 +194,9 @@ fi
 
 
 %changelog
+* Thu Jun 16 2016 Ben Harper <ben.harper@rackspace.com> - 2.4.0-3.ius
+- update filters to include zts
+
 * Tue Mar 08 2016 Carl George <carl.george@rackspace.com> - 2.4.0-2.ius
 - Re-add scriptlets, file triggers aren't available in EL version of RPM
 
