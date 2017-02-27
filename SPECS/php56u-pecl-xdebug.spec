@@ -98,6 +98,7 @@ zend_extension=%{pecl_name}.so
 
 ; see http://xdebug.org/docs/all_settings
 EOF
+sed -e '1d' NTS/%{pecl_name}.ini >> %{ini_name}
 
 
 %build
@@ -197,6 +198,7 @@ fi
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 - Don't install/register LICENSE during %%prep
 - Generate ini file during %%prep
+- Use uptream provided configuration with all settings (Fedora)
 
 * Mon Dec 05 2016 Ben Harper <ben.harper@rackspace.com> - 2.5.0-1.ius
 - Latest upstream
