@@ -1,5 +1,5 @@
 %global pecl_name xdebug
-%global php_base php56u
+%global php_base  php56u
 %global with_zts  0%{?__ztsphp:1}
 # XDebug should be loaded after opcache
 %global ini_name  15-%{pecl_name}.ini
@@ -46,8 +46,7 @@ Provides:       %{php_base}-pecl(Xdebug)%{?_isa} = %{version}
 # conflict with the stock name
 Conflicts:      php-pecl-%{pecl_name} < %{version}
 
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{php_ztsextdir}/.*\.so$}
 %{?filter_setup}
 
@@ -74,7 +73,7 @@ Xdebug also provides:
 %prep
 %setup -qc
 mv %{pecl_name}-%{version} NTS
-cd NTS
+pushd NTS
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -83,7 +82,7 @@ if test "$ver" != "%{version}"; then
    exit 1
 fi
 
-cd ..
+popd
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -92,7 +91,7 @@ cp -pr NTS ZTS
 
 
 %build
-cd NTS
+pushd NTS
 %{_bindir}/phpize
 %configure \
     --enable-xdebug  \
@@ -105,14 +104,16 @@ pushd debugclient
 %configure --with-libedit
 make %{?_smp_mflags}
 popd
+popd
 
 %if %{with_zts}
-cd ../ZTS
+pushd ZTS
 %{_bindir}/zts-phpize
 %configure \
     --enable-xdebug  \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+popd
 %endif
 
 
@@ -149,7 +150,7 @@ zend_extension=%{pecl_name}.so
 EOF
 %endif
 
-# Test & Documentation
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -157,13 +158,13 @@ done
 
 %check
 # only check if build extension can be loaded
-%{_bindir}/php \
+%{__php} \
     --no-php-ini \
     --define zend_extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep Xdebug
 
 %if %{with_zts}
-%{_bindir}/zts-php \
+%{__ztsphp} \
     --no-php-ini \
     --define zend_extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep Xdebug
@@ -175,7 +176,7 @@ done
 
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 ]; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -183,9 +184,10 @@ fi
 %files
 %license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
+%{_bindir}/debugclient
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{_bindir}/debugclient
 %{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
