@@ -126,7 +126,7 @@ install -Dpm 755 NTS/debugclient/debugclient \
         %{buildroot}%{_bindir}/debugclient
 
 # install package registration file
-install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{pecl_name}.xml
 
 # install config file
 install -d %{buildroot}%{php_inidir}
@@ -172,7 +172,7 @@ done
 
 
 %post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
 
 
 %postun
@@ -185,10 +185,11 @@ fi
 %license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
 %{_bindir}/debugclient
+%{pecl_xmldir}/%{pecl_name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -198,6 +199,7 @@ fi
 %changelog
 * Mon Feb 27 2017 Carl George <carl.george@rackspace.com> - 2.5.1-1.ius
 - Latest upstream
+- Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 
 * Mon Dec 05 2016 Ben Harper <ben.harper@rackspace.com> - 2.5.0-1.ius
 - Latest upstream
