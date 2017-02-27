@@ -73,6 +73,9 @@ Xdebug also provides:
 %prep
 %setup -qc
 mv %{pecl_name}-%{version} NTS
+
+sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml
+
 pushd NTS
 
 # Check extension version
@@ -200,6 +203,7 @@ fi
 * Mon Feb 27 2017 Carl George <carl.george@rackspace.com> - 2.5.1-1.ius
 - Latest upstream
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
+- Don't install/register LICENSE during %%prep
 
 * Mon Dec 05 2016 Ben Harper <ben.harper@rackspace.com> - 2.5.0-1.ius
 - Latest upstream
